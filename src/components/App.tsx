@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import { connect} from 'react-redux';
-import { Todo, fetchTodos, deleteTodo } from '../actions';
-import { StoreState } from '../redusers';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Todo, fetchTodos, deleteTodo } from "../actions";
+import { StoreState } from "../redusers";
 
 interface AppProps {
   todos: Todo[];
@@ -13,57 +13,51 @@ interface AppState {
   fetching: boolean;
 }
 
-class _App extends Component <AppProps, AppState> {
-
-  constructor(props:AppProps){
+class _App extends Component<AppProps, AppState> {
+  constructor(props: AppProps) {
     super(props);
-    this.state = { fetching: false }
-  }
-
-  componentDidMount() {
-    this.props.fetchTodos();
+    this.state = { fetching: false };
   }
 
   componentDidUpdate(prevProps: AppProps): void {
     if (!prevProps.todos.length && this.props.todos.length) {
-      this.setState({ fetching : false});
-    };
-  };
-
-  onButtonClick = () : void => {
-    this.props.fetchTodos();
-    this.setState({ fetching : true });
-  };
-
-  onTodoClick = (id: number): void =>{
-    this.props.deleteTodo(id);
+      this.setState({ fetching: false });
+    }
   }
+
+  onButtonClick = (): void => {
+    this.props.fetchTodos();
+    this.setState({ fetching: true });
+  };
+
+  onTodoClick = (id: number): void => {
+    this.props.deleteTodo(id);
+  };
 
   renderTodos(): JSX.Element[] {
     return this.props.todos.map((todo: Todo) => {
       return (
-        <div onClick={()=>this.onTodoClick(todo.id)} key = {todo.id}>{todo.title}</div>)
-    })
+        <div onClick={() => this.onTodoClick(todo.id)} key={todo.id}>
+          {todo.title}
+        </div>
+      );
+    });
   }
 
-  render(){
+  render() {
     // console.log(this.props.todos);
     return (
       <div>
         <button onClick={this.onButtonClick}>Fetch</button>
-        {this.state.fetching ? 'LOADING' : null}
+        {this.state.fetching ? "LOADING" : null}
         {this.renderTodos()}
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = ({todos} : StoreState) : { todos: Todo[]} => {
-  return {todos};
+const mapStateToProps = ({ todos }: StoreState): { todos: Todo[] } => {
+  return { todos };
 };
 
-export const App = connect(
-    mapStateToProps,
-    {fetchTodos, deleteTodo}
-)(_App);
-
+export const App = connect(mapStateToProps, { fetchTodos, deleteTodo })(_App);
